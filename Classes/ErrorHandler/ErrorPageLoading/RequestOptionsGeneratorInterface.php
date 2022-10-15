@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace AawTeam\Pagenotfoundhandling\Http;
+namespace AawTeam\Pagenotfoundhandling\ErrorHandler\ErrorPageLoading;
 
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
@@ -17,21 +17,20 @@ namespace AawTeam\Pagenotfoundhandling\Http;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core\Http\Response;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
- * ResponseFactory
+ * RequestOptionsGeneratorInterface
  */
-class ResponseFactory implements ResponseFactoryInterface
+interface RequestOptionsGeneratorInterface
 {
     /**
-     * {@inheritDoc}
-     * @see \Psr\Http\Message\ResponseFactoryInterface::createResponse()
+     * Generate the request options for the Guzzle HTTP client
+     *
+     * @param ServerRequestInterface $request
+     * @param UriInterface $errorPageURI
+     * @return array
      */
-    public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
-    {
-        return (new Response())->withStatus($code, $reasonPhrase);
-    }
+    public function generate(ServerRequestInterface $request, UriInterface $errorPageURI): array;
 }

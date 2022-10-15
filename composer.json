@@ -15,7 +15,8 @@
     ],
     "require": {
         "php": ">=7.4",
-        "typo3/cms-core": "^10.4.32 || ^11.5.17"
+        "typo3/cms-core": "^10.4.32 || ^11.5.17",
+        "guzzlehttp/guzzle": "^7.0"
     },
     "require-dev": {
         "nimut/testing-framework": "^6.0"

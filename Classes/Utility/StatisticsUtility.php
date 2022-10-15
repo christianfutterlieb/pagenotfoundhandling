@@ -17,10 +17,10 @@ namespace AawTeam\Pagenotfoundhandling\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AawTeam\Pagenotfoundhandling\ErrorHandler\Exception\InvalidOrNoSiteException;
+use AawTeam\Pagenotfoundhandling\ErrorHandler\Psr7Typo3Connector;
 use Psr\Http\Message\RequestInterface;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Site\Entity\Site;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Database\Connection;
 
 /**
  * StatisticsUtility
@@ -28,17 +28,35 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class StatisticsUtility
 {
     /**
+     * @var Connection
+     */
+    protected $connection;
+
+    /**
+     * @var Psr7Typo3Connector
+     */
+    protected $psr7Typo3Connector;
+
+    public function __construct(Connection $connection, Psr7Typo3Connector $psr7Typo3Connector)
+    {
+        $this->connection = $connection;
+        $this->psr7Typo3Connector = $psr7Typo3Connector;
+    }
+
+    /**
      * @param RequestInterface $request
      * @param int $status
      * @param string|null $failureReasonCode (see \TYPO3\CMS\Frontend\Page\PageAccessFailureReasons)
      */
-    public static function recordRequest(RequestInterface $request, int $status, ?string $failureReasonCode = null)
+    public function recordRequest(RequestInterface $request, int $status, ?string $failureReasonCode = null)
     {
-        /** @var Site $site */
-        $site = $request->getAttribute('site', null);
-        $siteIdentifier = $site instanceof Site ? $site->getIdentifier() : null;
+        try {
+            $siteIdentifier = $this->psr7Typo3Connector->getSite($request)->getIdentifier();
+        } catch (InvalidOrNoSiteException $e) {
+            $siteIdentifier = null;
+        }
 
-        self::getConnectionForTable('tx_pagenotfoundhandling_history')->insert(
+        $this->connection->insert(
             'tx_pagenotfoundhandling_history',
             [
                 'time' => time(),
@@ -59,17 +77,5 @@ class StatisticsUtility
                 \PDO::PARAM_STR,
             ]
         );
-    }
-
-    /**
-     * @param string|null $tableName
-     * @return \TYPO3\CMS\Core\Database\Connection
-     */
-    protected static function getConnectionForTable(?string $tableName = null)
-    {
-        if ($tableName === null) {
-            return GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionByName(ConnectionPool::DEFAULT_CONNECTION_NAME);
-        }
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($tableName);
     }
 }

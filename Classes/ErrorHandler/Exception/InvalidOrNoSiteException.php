@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace AawTeam\Pagenotfoundhandling\ErrorHandler;
+namespace AawTeam\Pagenotfoundhandling\ErrorHandler\Exception;
 
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
@@ -17,25 +17,26 @@ namespace AawTeam\Pagenotfoundhandling\ErrorHandler;
  * The TYPO3 project - inspiring people to share!
  */
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
-use TYPO3\CMS\Core\Error\PageErrorHandler\PageErrorHandlerInterface;
+use TYPO3\CMS\Core\Site\Entity\SiteInterface;
 
 /**
- * PageErrorHandlerTest
+ * InvalidOrNoSiteException
  */
-class PageErrorHandlerTest extends UnitTestCase
+class InvalidOrNoSiteException extends \RuntimeException
 {
-    protected function getTestSubject(): PageErrorHandler
+    /**
+     * @var SiteInterface
+     */
+    protected $site;
+
+    public function __construct(?SiteInterface $site, string $message = null, int $code = null, \Throwable $previous = null)
     {
-        $subject = new PageErrorHandler(404, []);
-        return $subject;
+        $this->site = $site;
+        parent::__construct($message, $code, $previous);
     }
 
-    /**
-     * @test
-     */
-    public function implementsCorrectInterface()
+    public function getSite(): ?SiteInterface
     {
-        self::assertInstanceOf(PageErrorHandlerInterface::class, $this->getTestSubject());
+        return $this->site;
     }
 }

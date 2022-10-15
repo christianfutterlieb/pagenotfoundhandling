@@ -1,0 +1,35 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  AawTeam\Pagenotfoundhandling\:
+    resource: '../Classes/*'
+    exclude: '../Classes/ErrorHandler/Exception/*'
+
+  AawTeam\Pagenotfoundhandling\ErrorHandler\PageErrorHandler:
+    public: true
+    autowire: false
+
+  AawTeam\Pagenotfoundhandling\ErrorHandler\ConcreteErrorHandler:
+    public: true
+
+  AawTeam\Pagenotfoundhandling\Utility\StatisticsUtility:
+    arguments:
+      - '@databaseConnection.history'
+
+  databaseConnection.history:
+    class: TYPO3\CMS\Core\Database\Connection
+    factory:
+      - '@TYPO3\CMS\Core\Database\ConnectionPool'
+      - 'getConnectionForTable'
+    arguments:
+      - 'tx_pagenotfoundhandling_history'
+
+  # Interface implementations
+  AawTeam\Pagenotfoundhandling\ErrorHandler\ErrorPageLoading\UriGeneratorInterface:
+    alias: AawTeam\Pagenotfoundhandling\ErrorHandler\ErrorPageLoading\UriGenerator
+
+  AawTeam\Pagenotfoundhandling\ErrorHandler\ErrorPageLoading\PageLoaderInterface:
+    alias: AawTeam\Pagenotfoundhandling\ErrorHandler\ErrorPageLoading\PageLoader
