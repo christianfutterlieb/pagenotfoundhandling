@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<ruleset name="PHPMD rule set for pagenotfoundhandling"
+         xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0
+                     http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:noNamespaceSchemaLocation="
+                     http://pmd.sf.net/ruleset_xml_schema.xsd">
+    <description>Custom PHPMD rule set for pagenotfoundhandling</description>
+    <rule ref="rulesets/cleancode.xml">
+        <exclude name="StaticAccess" /> <!-- Excluded: precision below -->
+        <exclude name="MissingImport" /> <!-- Excluded: precision below -->
+        <exclude name="ElseExpression" /> <!-- Excluded: too strict rule -->
+    </rule>
+    <rule ref="rulesets/cleancode.xml/StaticAccess">
+        <properties>
+            <property name="exceptions" value="
+                \TYPO3\CMS\Core\Utility\ArrayUtility,
+                \TYPO3\CMS\Core\Utility\GeneralUtility
+            " />
+        </properties>
+    </rule>
+    <rule ref="rulesets/cleancode.xml/MissingImport">
+        <properties>
+            <property name="ignore-global" value="true" />
+        </properties>
+    </rule>
+    <rule ref="rulesets/codesize.xml" />
+    <rule ref="rulesets/controversial.xml">
+        <exclude name="Superglobals" /> <!-- Excluded: no possibility to exclude $GLOBALS['TYPO3_CONF_VARS'], $GLOBALS['TSFE'], $GLOBALS['TYPO3_REQUEST'], etc. -->
+    </rule>
+    <rule ref="rulesets/design.xml" />
+    <rule ref="rulesets/naming.xml">
+        <exclude name="BooleanGetMethodName" /> <!-- Excluded: extbase domain models do that by default -->
+        <exclude name="ShortVariable" /> <!-- Excluded: allow short vars like $i in loops -->
+        <exclude name="LongVariable" /> <!-- Excluded: precision below -->
+    </rule>
+    <rule ref="rulesets/naming.xml/LongVariable">
+        <properties>
+            <property name="maximum" value="30" /> <!-- Raise to 30 for variable names like $typoScriptFrontendController (default is 20) -->
+        </properties>
+    </rule>
+    <rule ref="rulesets/unusedcode.xml">
+        <exclude name="UnusedFormalParameter" /> <!-- Excluded: this happens a lot when implementing TYPO3 API -->
+    </rule>
+</ruleset>

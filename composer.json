@@ -20,7 +20,8 @@
     },
     "require-dev": {
         "nimut/testing-framework": "^6.0",
-        "friendsofphp/php-cs-fixer": "^3.13"
+        "friendsofphp/php-cs-fixer": "^3.13",
+        "phpmd/phpmd": "^2.13"
     },
     "replace": {
         "typo3-ter/pagenotfoundhandling": "self.version"
@@ -59,6 +60,9 @@
         ],
         "code:php-cs-fixer": [
             ".Build/bin/php-cs-fixer fix --config=Build/php-cs-fixer.php --cache-file=Build/.php-cs-fixer.cache ."
+        ],
+        "code:phpmd": [
+            ".Build/bin/phpmd Classes/ ansi Build/phpmd.xml"
         ]
     },
     "support": {
