@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\Pagenotfoundhandling\Controller;
 
 /*
@@ -26,9 +28,6 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
  */
 class StatisticsController extends ActionController
 {
-    /**
-     *
-     */
     protected function indexAction()
     {
         $this->view->assignMultiple([
@@ -48,7 +47,7 @@ class StatisticsController extends ActionController
         $qb = $this->getConnectionForTable('tx_pagenotfoundhandling_history')->createQueryBuilder();
         $qb->selectLiteral(...[
             'count(*) AS ' . $qb->quoteIdentifier('count'),
-            'MAX('. $qb->quoteIdentifier('history.time') . ') AS '. $qb->quoteIdentifier('latest_time'),
+            'MAX(' . $qb->quoteIdentifier('history.time') . ') AS ' . $qb->quoteIdentifier('latest_time'),
         ])
         ->addSelect(
             'history.' . $groupByField

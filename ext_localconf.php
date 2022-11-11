@@ -16,7 +16,7 @@
 
 defined('TYPO3_MODE') or die();
 
-(function() {
+(function () {
     /** @var \AawTeam\Pagenotfoundhandling\Configuration\ExtensionConfiguration $extensionConfiguration */
     $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\AawTeam\Pagenotfoundhandling\Configuration\ExtensionConfiguration::class);
 
@@ -27,11 +27,12 @@ defined('TYPO3_MODE') or die();
             'pagenotfoundhandling-module-statistics',
             \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
             [
-                'source' => 'EXT:pagenotfoundhandling/Resources/Public/Icons/ModuleStatistics.svg'
+                'source' => 'EXT:pagenotfoundhandling/Resources/Public/Icons/ModuleStatistics.svg',
             ]
         );
 
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
+            '
 module.tx_pagenotfoundhandling {
     view {
         templateRootPaths.10 = EXT:pagenotfoundhandling/Resources/Private/Backend/Templates/

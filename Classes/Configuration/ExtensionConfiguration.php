@@ -1,6 +1,9 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\Pagenotfoundhandling\Configuration;
+
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
  *
@@ -16,8 +19,8 @@ namespace AawTeam\Pagenotfoundhandling\Configuration;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration as TYPO3ExtensionConfiguration;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration as TYPO3ExtensionConfiguration;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

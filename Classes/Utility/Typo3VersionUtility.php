@@ -1,6 +1,9 @@
 <?php
+
 declare(strict_types=1);
+
 namespace AawTeam\Pagenotfoundhandling\Utility;
+
 /*
  * Copyright by Agentur am Wasser | Maeder & Partner AG
  *
@@ -16,8 +19,8 @@ namespace AawTeam\Pagenotfoundhandling\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\SingletonInterface;
 
 /**
  * Typo3VersionUtility
@@ -29,9 +32,6 @@ class Typo3VersionUtility implements SingletonInterface
      */
     private $typo3Version;
 
-    /**
-     *
-     */
     public function __construct(Typo3Version $typo3Version)
     {
         $this->typo3Version = $typo3Version;
