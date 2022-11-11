@@ -16,9 +16,8 @@ namespace AawTeam\Pagenotfoundhandling\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Information\Typo3Version;
 
 /**
  * Typo3VersionUtility
@@ -33,19 +32,9 @@ class Typo3VersionUtility implements SingletonInterface
     /**
      *
      */
-    public function __construct()
+    public function __construct(Typo3Version $typo3Version)
     {
-        if (class_exists(Typo3Version::class)) {
-            $this->typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrentTypo3Version(): string
-    {
-        return $this->typo3Version ? $this->typo3Version->getVersion() : TYPO3_version;
+        $this->typo3Version = $typo3Version;
     }
 
     /**
@@ -64,6 +53,6 @@ class Typo3VersionUtility implements SingletonInterface
      */
     public function compareCurrentTypo3Version(string $version, string $operator): bool
     {
-        return version_compare($this->getCurrentTypo3Version(), $version, $operator);
+        return version_compare($this->typo3Version->getVersion(), $version, $operator);
     }
 }
