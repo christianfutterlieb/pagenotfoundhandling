@@ -20,41 +20,6 @@ defined('TYPO3_MODE') or die();
     /** @var \AawTeam\Pagenotfoundhandling\Configuration\ExtensionConfiguration $extensionConfiguration */
     $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\AawTeam\Pagenotfoundhandling\Configuration\ExtensionConfiguration::class);
 
-    // Register logger
-    if ($extensionConfiguration->has('logLevel')) {
-        $logLevel = (int)$extensionConfiguration->get('logLevel');
-        if ($logLevel > -1 && $logLevel < 8) {
-            // TYPO3 is PSR-3 compliant as of v10, see https://docs.typo3.org/c/typo3/cms-core/master/en-us/Changelog/10.0/Breaking-88799-IntroducedPSR-3CompatibleLoggingAPI.html
-            // For now, just 'translate' the log level numbers.
-            // @todo update this code when dropping support for TYPO3 < v10
-            /** @var \AawTeam\Pagenotfoundhandling\Utility\Typo3VersionUtility $typo3VersionUtility */
-            $typo3VersionUtility = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\AawTeam\Pagenotfoundhandling\Utility\Typo3VersionUtility::class);
-            if ($typo3VersionUtility->isCurrentTypo3VersionAtLeast('10')) {
-                $typo3LogLevels2psr3Levels = [
-                    0 => \Psr\Log\LogLevel::EMERGENCY,
-                    1 => \Psr\Log\LogLevel::ALERT,
-                    2 => \Psr\Log\LogLevel::CRITICAL,
-                    3 => \Psr\Log\LogLevel::ERROR,
-                    4 => \Psr\Log\LogLevel::WARNING,
-                    5 => \Psr\Log\LogLevel::NOTICE,
-                    6 => \Psr\Log\LogLevel::INFO,
-                    7 => \Psr\Log\LogLevel::DEBUG,
-                ];
-                if (array_key_exists($logLevel, $typo3LogLevels2psr3Levels)) {
-                    $logLevel = $typo3LogLevels2psr3Levels[$logLevel];
-                }
-            }
-
-            $GLOBALS['TYPO3_CONF_VARS']['LOG']['AawTeam']['Pagenotfoundhandling']['writerConfiguration'] = [
-                $logLevel => [
-                    \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
-                        'logFileInfix' => 'pnfh',
-                    ],
-                ],
-            ];
-        }
-    }
-
     // Add the statistics backend module configuration
     if ($extensionConfiguration->has('enableStatisticsModule') && $extensionConfiguration->get('enableStatisticsModule')) {
         $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
