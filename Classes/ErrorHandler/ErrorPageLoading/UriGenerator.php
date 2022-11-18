@@ -112,6 +112,24 @@ class UriGenerator implements UriGeneratorInterface
             (int)$urlParams['pageuid'],
             $requestUriParameters
         );
-        return $requestUri;
+
+        return $this->addRequiredAuthorityToGeneratedUri($requestUri, $request);
+    }
+
+    /**
+     * As we need a true absolute URI (with the authority component) and the
+     * TYPO3 PageRouter does not necessarily return that (when the 'base' in the
+     * SiteConfiguration is '/' for example), we add these parts to $uri.
+     */
+    protected function addRequiredAuthorityToGeneratedUri(UriInterface $uri, ServerRequestInterface $request): UriInterface
+    {
+        if ($uri->getHost() === '') {
+            $uri = $uri
+                ->withScheme($request->getUri()->getScheme())
+                ->withUserInfo($request->getUri()->getUserInfo())
+                ->withHost($request->getUri()->getHost())
+                ->withPort($request->getUri()->getPort());
+        }
+        return $uri;
     }
 }
