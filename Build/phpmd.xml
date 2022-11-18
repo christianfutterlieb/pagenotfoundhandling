@@ -16,7 +16,8 @@
         <properties>
             <property name="exceptions" value="
                 \TYPO3\CMS\Core\Utility\ArrayUtility,
-                \TYPO3\CMS\Core\Utility\GeneralUtility
+                \TYPO3\CMS\Core\Utility\GeneralUtility,
+                \TYPO3\CMS\Extbase\Utility\DebuggerUtility
             " />
         </properties>
     </rule>

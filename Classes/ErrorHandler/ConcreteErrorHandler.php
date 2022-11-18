@@ -24,7 +24,6 @@ use AawTeam\Pagenotfoundhandling\ErrorHandler\ErrorPageLoading\RequestOptionsGen
 use AawTeam\Pagenotfoundhandling\ErrorHandler\ErrorPageLoading\UriGeneratorInterface;
 use AawTeam\Pagenotfoundhandling\ErrorHandler\Exception\InvalidOrNoSiteException;
 use AawTeam\Pagenotfoundhandling\Utility\StatisticsUtility;
-use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -153,7 +152,14 @@ class ConcreteErrorHandler implements LoggerAwareInterface
         ]);
 
         // Fetch the error page
-        $errorPageResponse = $this->httpHandler->sendErrorPageRequest($errorPageURI, $errorPageRequestOptions);
+        try {
+            $errorPageResponse = $this->httpHandler->sendErrorPageRequest($errorPageURI, $errorPageRequestOptions);
+        } catch (\Exception $e) {
+            if ($site->getConfiguration()['debugErrorPageRequestException']) {
+                return $this->getDebugErrorPageRequestExceptionResponse($errorPageURI, $errorPageRequestOptions, $site, $e);
+            }
+            throw $e;
+        }
         $errorPageContents = $errorPageResponse->getBody()->getContents();
 
         // Replace old-style markers
@@ -213,6 +219,7 @@ class ConcreteErrorHandler implements LoggerAwareInterface
     ' . \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($debugArray, 'EXT:pagenotfoundhandling DEBUG', 8, false, true, true) . '
 </body>
 </html>';
-        return $this->createResponse($content, 500);
+
+        return $this->httpHandler->createResponse($content, 500);
     }
 }
