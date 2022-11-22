@@ -88,7 +88,7 @@ Options:
             - 11 (default): use TYPO3 core v11
 
     -e "<phpunit options>"
-        Only with -s functional|functionalDeprecated|unit|unitDeprecated|unitRandom|acceptance
+        Only with -s unit
         Additional options to send to phpunit (unit & functional tests) or codeception (acceptance
         tests). For phpunit, options starting with "--" must be added after options starting with "-".
         Example -e "-v --filter canRetrieveValueWithGP" to enable verbose output AND filter tests
@@ -105,7 +105,7 @@ Options:
         is not listening on default port.
 
     -n
-        Only with -s cgl|cglGit
+        Only with -s cgl
         Activate dry-run in CGL check that does not actively change files and only prints broken ones.
 
     -u
@@ -291,6 +291,20 @@ case ${TEST_SUITE} in
         docker-compose run unit
         SUITE_EXIT_CODE=$?
         docker-compose down
+        ;;
+    update)
+        # prune unused, dangling local volumes
+        echo "> prune unused, dangling local volumes"
+        docker volume ls -q -f driver=local -f dangling=true | awk '$0 ~ /^[0-9a-f]{64}$/ { print }' | xargs -I {} docker volume rm {}
+        echo ""
+        # pull typo3/core-testing-*:latest versions of those ones that exist locally
+        echo "> pull typo3/core-testing-*:latest versions of those ones that exist locally"
+        docker images typo3/core-testing-*:latest --format "{{.Repository}}:latest" | xargs -I {} docker pull {}
+        echo ""
+        # remove "dangling" typo3/core-testing-* images (those tagged as <none>)
+        echo "> remove \"dangling\" typo3/core-testing-* images (those tagged as <none>)"
+        docker images typo3/core-testing-* --filter "dangling=true" --format "{{.ID}}" | xargs -I {} docker rmi {}
+        echo ""
         ;;
     *)
         echo "Invalid -s option argument ${TEST_SUITE}" >&2
